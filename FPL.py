@@ -52,6 +52,7 @@ Trim_elements['team'] = Trim_elements['team'].map(teams.set_index('id').name)
 
 Trim_elements['value'] = Trim_elements.value_season.astype(float)
 
+st.write(Trim_elements)
 # st.write('''### Sorting by Value''')
 
 # st.write(Trim_elements.sort_values('value',ascending=False).head(10))
@@ -103,11 +104,20 @@ team_name = st.selectbox('Select a Team',teams.name)
 
 team_seg = Trim_elements.loc[Trim_elements.team == team_name]
 position_pivot = team_seg.pivot_table(index='position',values='value',aggfunc=np.mean)
+position_pivot_points = team_seg.pivot_table(index='position',values='total_points',aggfunc=np.mean)
 
 st.write('''## Value by Position for ''' + str(team_name))
 
 X = {"col" : "position", "title": "Positions"}
-Y = {"col" : "value", "title": "Value"}
+Y1 = {"col" : "value", "title": "Value"}
+Y2 = {"col" : "total_points", "title": "Total Points"}
 
-fig = altair_plot(position_pivot, X, Y, "Positionwise Distribution", '#993dba')
-st.altair_chart(fig, use_container_width=True)
+col1, col2 = st.beta_columns(2)
+
+with col1:
+    fig = altair_plot(position_pivot, X, Y1, "Positionwise Distribution By Value", '#993dba')
+    st.altair_chart(fig, use_container_width=True)
+
+with col2:
+    fig = altair_plot(position_pivot_points, X, Y2, "Positionwise Distribution By Points", '#993dba')
+    st.altair_chart(fig, use_container_width=True)
