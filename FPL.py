@@ -80,15 +80,23 @@ st.altair_chart(fig, use_container_width=True)
 
 st.write('''## Best Team in FPL''')
 
-best_team = Trim_elements.pivot_table(index='team', values='value', aggfunc=np.mean)
+best_team_value = Trim_elements.pivot_table(index='team', values='value', aggfunc=np.mean)
+best_team_points = Trim_elements.pivot_table(index='team', values='total_points', aggfunc=np.mean)
 
 X = {"col" : "team", "title": "Teams"}
-Y = {"col" : "value", "title": "Value"}
+Y1 = {"col" : "value", "title": "Value"}
+Y2 = {"col" : "total_points", "title": "Total Points"}
 
-fig = altair_plot(best_team, X, Y, "Teamwise Distribution", '#FF4B4B')
+col1, col2 = st.beta_columns(2)
 
+with col1:
+    fig = altair_plot(best_team_value, X, Y1, "Teamwise Distribution By Value", '#FF4B4B')
+    st.altair_chart(fig, use_container_width=True)
+
+with col2:
+    fig = altair_plot(best_team_points, X, Y2, "Teamwise Distribution By Total Points", '#FF4B4B')
+    st.altair_chart(fig, use_container_width=True)
 # st.bar_chart(best_team.sort_values('value', ascending=False))
-st.altair_chart(fig, use_container_width=True)
 
 ##################################      END PLOT        ########################################## 
 
